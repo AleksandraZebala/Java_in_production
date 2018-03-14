@@ -1,0 +1,32 @@
+group 'jwzp'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task changeProfile (dependsOn: tasks.build) {
+
+    doLast {
+
+        if(project.hasProperty('profile')){
+
+            def profile = project.property('profile')
+
+            def profileProperties = file('src/main/resources/'+profile+'.properties')
+            def properties = file('src/main/resources/db.properties')
+
+            def props = new Properties(new FileWriter(profileProperties))
+
+
+        }
+    }
+}
