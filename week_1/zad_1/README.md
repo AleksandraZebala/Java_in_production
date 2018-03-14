@@ -2,6 +2,8 @@
 
 Stworzyć projekt budowany Gradlem. Doodać zależność od biblioteki apache.lang.commons (lub dowolnej tego typu) w buildzie gradle’owym; użyć czegoś z tej biblioteki, stworzyć artefakt będący “fat-jarem” i zainstalować w lokalnym repo.
 
+## Wskazówki do rozwiązania
+
 Komendy:
 
 1. Budowanie fat-jara:

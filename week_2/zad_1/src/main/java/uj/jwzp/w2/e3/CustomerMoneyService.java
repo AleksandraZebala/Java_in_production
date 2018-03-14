@@ -40,6 +40,4 @@ public class CustomerMoneyService {
         kasa.put(customer, money.add(amount));
     }
 
-    
-
 }
