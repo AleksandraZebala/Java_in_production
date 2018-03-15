@@ -21,12 +21,31 @@ task changeProfile (dependsOn: tasks.build) {
 
             def profile = project.property('profile')
 
-            def profileProperties = file('src/main/resources/'+profile+'.properties')
-            def properties = file('src/main/resources/db.properties')
+            def propertiesFile = file 'src/main/resources/db.properties'
+            def properties = new Properties()
+            propertiesFile.withReader{ properties.load(it)}
 
-            def props = new Properties(new FileWriter(profileProperties))
+            def profilePropertiesFile = file 'src/main/resources/'+profile+'.properties'
+            def profileProperties = new Properties()
+            profilePropertiesFile.withReader{ profileProperties.load(it)}
 
+            Enumeration<String> enums = (Enumeration<String>) properties.propertyNames();
+            while (enums.hasMoreElements()) {
 
+                String key = enums.nextElement();
+
+                String propertyValue = properties.getProperty(key)
+                String strippedPropertyValue = ''
+                for (int i = 2; i < propertyValue.length() - 1; i++){
+                    strippedPropertyValue += propertyValue[i]
+                }
+
+                properties.setProperty(key, profileProperties.getProperty(strippedPropertyValue))
+            }
+
+            def outputStream = new FileOutputStream('build/resources/main/db.properties')
+            outputStream.withWriter { properties.store(outputStream, null)}
+            outputStream.close()
         }
     }
 }
