@@ -1,0 +1,57 @@
+import java.security.AllPermission
+
+plugins {
+    id "java"
+    id "maven-publish"
+    id "com.github.johnrengelman.shadow" version "2.0.2"
+    id "com.palantir.jacoco-coverage" version "0.4.0"
+}
+
+group 'pl.jwzp'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.2'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+
+    /*compile (
+            'com.google.code.gson:gson:2.8.2',
+            'commons-cli:commons-cli:1.2',
+            'org.apache.commons:commons-lang3:3.5'
+
+    )*/
+
+    testCompile(
+            'junit:junit:4.12',
+            'org.assertj:assertj-core:3.9.0',
+            'org.mockito:mockito-core:2.8.9',
+            'org.powermock:powermock-api-mockito2:1.7.3',
+            'org.powermock:powermock-module-junit4:1.7.3'
+    )
+}
+
+shadowJar {
+
+    manifest {
+        attributes "Main": "zad_2.Main"
+    }
+
+    baseName = 'transaction-generator'
+    version = null
+    classifier = null
+}
+
+test {
+    reports {
+        junitXml.enabled = false
+        html.enabled = true
+    }
+}
