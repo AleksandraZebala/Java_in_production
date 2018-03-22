@@ -148,7 +148,7 @@ public class CommandParser {
         String eventsCount = cmd.getOptionValue("eventsCount");
 
         if(eventsCount != null){
-            if(StringUtils.isNumeric(eventsCount))
+            if(!StringUtils.isNumeric(eventsCount))
                 throw new WrongArgumentException();
 
             result.eventsCount = Integer.parseInt(eventsCount);
@@ -161,10 +161,10 @@ public class CommandParser {
 
         String outDir = cmd.getOptionValue("outDir");
 
-        if(outDir == null)
-            outDir = "src/main/java/";
-
-        result.outDir = outDir;
+        if(outDir != null)
+            result.outDir = "build/"+outDir;
+        else
+            result.outDir = "build/";
 
         // RETURN
 

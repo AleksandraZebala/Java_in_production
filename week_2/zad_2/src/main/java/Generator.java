@@ -1,4 +1,6 @@
 import com.google.gson.GsonBuilder;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -36,8 +38,12 @@ public class Generator {
 
         String jsonData = new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(outs);
 
-        String output = input.outDir;
-        PrintWriter out = new PrintWriter(output + "/output.json");
+        File output = new File(input.outDir);
+
+        if(!output.exists())
+            output.mkdir();
+
+        PrintWriter out = new PrintWriter(output + "output.json");
         out.println(jsonData);
         out.close();
     }

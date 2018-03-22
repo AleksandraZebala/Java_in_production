@@ -2,6 +2,7 @@ import org.apache.commons.cli.ParseException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.time.format.DateTimeParseException;
 
@@ -18,14 +19,11 @@ public class Main {
         catch(WrongArgumentException e){
             output = "Wrong arguments!";
         }
-        catch(DateTimeParseException e){
-            output = "Wrong arguments!";
-        }
-        catch(FileNotFoundException e){
+        catch(IOException e){
             output = "File not found!";
         }
         catch(Exception e){
-            output =  e.toString();
+            output =  "Wrong arguments!";
         }
 
         System.out.println(output);
