@@ -2,9 +2,15 @@
 
 ## Komentarz do rozwiązania
 
-plik wyjściowy o nazwie "output.json" domyślnie zapisuje się w sr/main/java
+plik wyjściowy ma nazwę "output.json", domyślnie zapisuje się w głównym folderze projektu
 
 Komendy do użycia:
+
+- Tworzenie raportów testowych:
+
+        gradle build
+        
+        gradle test
 
 - Budowanie fat-jara:
     
@@ -13,12 +19,6 @@ Komendy do użycia:
 - Dodawanie do lokalnego repozytorium:
 
         gradle publishMavenJavaPublicationToMavenLocal
-        
-- Tworzenie raportów testowych:
-
-        gradle build
-        
-        gradle test
         
 Przykładowa komenda (z treści zadania):
 

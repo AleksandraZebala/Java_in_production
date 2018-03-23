@@ -14,7 +14,7 @@ import java.io.File;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CommandParser.class)
-public class FilesTests {
+public class WrongFileTests {
 
     @Test(expected = WrongFileException.class)
     public void noFileTest() throws Exception{

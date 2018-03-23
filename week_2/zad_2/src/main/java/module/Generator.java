@@ -22,7 +22,8 @@ public class Generator{
             String[] itemValues = line.split(",");
             Item item = new Item();
             item.name = itemValues[0].replace("\"", "");
-            item.quantity = ThreadLocalRandom.current().nextInt(input.customerIds.from, input.customerIds.to);
+            item.quantity = ThreadLocalRandom.current()
+                    .nextInt(input.customerIds.from, input.customerIds.to);
             item.price = Float.parseFloat(itemValues[1]);
             items.add(item);
         });
@@ -33,13 +34,20 @@ public class Generator{
             OutputData output = new OutputData();
             output.id = i;
             output.timestamp = input.date;
-            output.customer_id = ThreadLocalRandom.current().nextInt(input.customerIds.from, input.customerIds.to);
+            output.customer_id = ThreadLocalRandom.current()
+                    .nextInt(input.customerIds.from, input.customerIds.to);
             output.items = items;
-            output.sum = items.stream().mapToDouble(item -> item.quantity * item.price).sum();
+            output.sum = items.stream()
+                    .mapToDouble(item -> item.quantity * item.price)
+                    .sum();
             outs.add(output);
         }
 
-        String jsonData = new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(outs);
+        String jsonData = new GsonBuilder()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create()
+                .toJson(outs);
 
         File output = new File(input.outDir);
 

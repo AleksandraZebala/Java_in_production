@@ -53,9 +53,9 @@ public class CommandParser {
     private static String parseDate(String in) throws WrongArgumentException {
 
         if (in == null) {
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String date = LocalDateTime.now().format(format);
-            return date + "T00:00:00.000-0100:" + date + "T23:59:59.999-0100";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            in = LocalDateTime.now().format(formatter);
+            in = in + "T00:00:00.000-0100:" + in + "T23:59:59.999-0100";
         }
 
         if (in.length() != 57)
@@ -64,13 +64,13 @@ public class CommandParser {
         String from = in.substring(0, 28);
         String to = in.substring(29, 57);
 
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
         long time1, time2;
 
         try {
-            time1 = Timestamp.from(ZonedDateTime.parse(from, format).toInstant()).getTime();
-            time2 = Timestamp.from(ZonedDateTime.parse(to, format).toInstant()).getTime();
+            time1 = Timestamp.from(ZonedDateTime.parse(from, formatter).toInstant()).getTime();
+            time2 = Timestamp.from(ZonedDateTime.parse(to, formatter).toInstant()).getTime();
         }
         catch(DateTimeParseException e){
             throw new WrongArgumentException();
@@ -79,10 +79,10 @@ public class CommandParser {
         long randTime = time1 + (long) (Math.random() * (time2 - time1));
 
         ZonedDateTime zoned = ZonedDateTime
-                    .ofInstant(Instant.ofEpochMilli(randTime), ZonedDateTime.parse(from, format)
+                    .ofInstant(Instant.ofEpochMilli(randTime), ZonedDateTime.parse(from, formatter)
                     .getZone());
 
-        return format.format(zoned);
+        return formatter.format(zoned);
     }
 
     private static File parseItemsFile (String in) throws WrongFileException{
@@ -107,7 +107,7 @@ public class CommandParser {
 
     private static String parseOutDir(String in){
         if (in == null)
-            return "output" ;
+            return "." ;
 
         return in;
     }
