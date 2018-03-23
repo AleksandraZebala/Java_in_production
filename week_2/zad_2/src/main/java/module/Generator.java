@@ -1,5 +1,8 @@
+package module;
 import com.google.gson.GsonBuilder;
-
+import data.InputData;
+import data.Item;
+import data.OutputData;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,9 +11,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.List;
 
-public class Generator {
+public class Generator{
 
-    public static void generate (InputData input) throws IOException {
+    public static void generate (InputData input) throws IOException{
 
         ArrayList<Item> items = new ArrayList<Item>();
 
@@ -19,7 +22,7 @@ public class Generator {
             String[] itemValues = line.split(",");
             Item item = new Item();
             item.name = itemValues[0].replace("\"", "");
-            item.quantity = ThreadLocalRandom.current().nextInt(input.customerIdsFrom, input.customerIdsTo);
+            item.quantity = ThreadLocalRandom.current().nextInt(input.customerIds.from, input.customerIds.to);
             item.price = Float.parseFloat(itemValues[1]);
             items.add(item);
         });
@@ -30,7 +33,7 @@ public class Generator {
             OutputData output = new OutputData();
             output.id = i;
             output.timestamp = input.date;
-            output.customer_id = ThreadLocalRandom.current().nextInt(input.customerIdsFrom, input.customerIdsTo);
+            output.customer_id = ThreadLocalRandom.current().nextInt(input.customerIds.from, input.customerIds.to);
             output.items = items;
             output.sum = items.stream().mapToDouble(item -> item.quantity * item.price).sum();
             outs.add(output);
@@ -43,7 +46,7 @@ public class Generator {
         if(!output.exists())
             output.mkdir();
 
-        PrintWriter out = new PrintWriter(output + "output.json");
+        PrintWriter out = new PrintWriter(output + "/output.json");
         out.println(jsonData);
         out.close();
     }

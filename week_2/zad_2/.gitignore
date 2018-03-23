@@ -4,5 +4,3 @@ target
 .gradle
 **/gradle
 **/*.iml
-gradlew
-gradlew.bat

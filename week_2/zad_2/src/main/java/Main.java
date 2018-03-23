@@ -1,31 +1,22 @@
-import org.apache.commons.cli.ParseException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.time.format.DateTimeParseException;
+import exceptions.WrongArgumentException;
+import exceptions.WrongFileException;
+import module.CommandParser;
+import module.Generator;
 
 public class Main {
-
-    public static String output;
-
     public static void main(String[] args){
-
         try {
             Generator.generate(CommandParser.parse(args));
-            output = "File generated";
+            System.out.println("File generated!");
         }
         catch(WrongArgumentException e){
-            output = "Wrong arguments!";
+            System.out.println("Wrong arguments!");
         }
-        catch(IOException e){
-            output = "File not found!";
+        catch(WrongFileException e){
+            System.out.println("File not found!");
         }
         catch(Exception e){
-            output =  "Wrong arguments!";
+            e.printStackTrace();
         }
-
-        System.out.println(output);
     }
 }
