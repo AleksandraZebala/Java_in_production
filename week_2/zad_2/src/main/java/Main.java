@@ -6,7 +6,7 @@ import module.Generator;
 public class Main {
     public static void main(String[] args){
         try {
-            Generator.generate(CommandParser.parse(args));
+            Generator.generateJSON(CommandParser.parse(args));
             System.out.println("File generated!");
         }
         catch(WrongArgumentException e){

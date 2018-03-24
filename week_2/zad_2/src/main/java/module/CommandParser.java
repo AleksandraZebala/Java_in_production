@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 
 public class CommandParser {
 
@@ -53,12 +55,16 @@ public class CommandParser {
         result.to = intValues[1];
     }
 
-    private static String parseDate(String in) throws WrongArgumentException {
+    private static void parseDateRange(String in, Range result) throws WrongArgumentException {
 
         if (in == null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             in = LocalDateTime.now().format(formatter);
-            in = in + "T00:00:00.000-0100:" + in + "T23:59:59.999-0100";
+
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            result.from = ZonedDateTime.parse(in + "T00:00:00.000-0100", formatter2);
+            result.to = ZonedDateTime.parse(in + "T23:59:59.999-0100", formatter2);
+            return;
         }
 
         if (in.length() != 57)
@@ -69,29 +75,18 @@ public class CommandParser {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-        long time1, time2;
-
         try {
-            time1 = Timestamp.from(ZonedDateTime.parse(from, formatter).toInstant()).getTime();
-            time2 = Timestamp.from(ZonedDateTime.parse(to, formatter).toInstant()).getTime();
-        }
-        catch(DateTimeParseException e){
+            result.from = ZonedDateTime.parse(from, formatter);
+            result.to = ZonedDateTime.parse(to, formatter);
+        } catch(DateTimeParseException e){
             throw new WrongArgumentException();
         }
-
-        long randTime = time1 + (long) (Math.random() * (time2 - time1));
-
-        ZonedDateTime zoned = ZonedDateTime
-                    .ofInstant(Instant.ofEpochMilli(randTime), ZonedDateTime.parse(from, formatter)
-                    .getZone());
-
-        return formatter.format(zoned);
     }
 
     private static File parseItemsFile (String in) throws WrongFileException{
 
         File file = new File("src/main/java/" + in);
-        if (!file.exists())
+        if (!FileWrapper.exists(file))
             throw new WrongFileException();
 
         return file;
@@ -132,7 +127,7 @@ public class CommandParser {
             parseRange(itemsCount, result.itemsCount, "1:5");
 
             String dateRange = cmd.getOptionValue("dateRange");
-            result.date = parseDate(dateRange);
+            parseDateRange(dateRange, result.dateRange);
 
             String eventsCount = cmd.getOptionValue("eventsCount");
             result.eventsCount = parseEventsCount(eventsCount, "100");

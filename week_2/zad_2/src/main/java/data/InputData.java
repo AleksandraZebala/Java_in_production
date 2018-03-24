@@ -1,12 +1,13 @@
 package data;
 import java.io.File;
+import java.time.ZonedDateTime;
 
 public class InputData {
-    public Range customerIds = new Range();
-    public String date;
+    public Range<Integer> customerIds = new Range();
+    public Range<ZonedDateTime> dateRange = new Range();
     public File itemsFile;
-    public Range itemsCount = new Range();
-    public Range itemsQuantity = new Range();
+    public Range<Integer> itemsCount = new Range();
+    public Range<Integer> itemsQuantity = new Range();
     public int eventsCount;
     public String outDir;
 }

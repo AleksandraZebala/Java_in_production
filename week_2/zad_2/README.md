@@ -6,11 +6,9 @@ plik wyjściowy ma nazwę "output.json", domyślnie zapisuje się w głównym fo
 
 Komendy do użycia:
 
-- Tworzenie raportów testowych:
+- Budowanie projektu i tworzenie raportów testowych:
 
         gradle build
-        
-        gradle test
 
 - Budowanie fat-jara:
     

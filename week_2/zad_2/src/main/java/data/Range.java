@@ -1,6 +1,6 @@
 package data;
 
-public class Range {
-    public int from;
-    public int to;
+public class Range<T> {
+    public T from;
+    public T to;
 }
