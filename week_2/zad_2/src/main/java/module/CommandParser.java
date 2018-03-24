@@ -38,6 +38,9 @@ public class CommandParser {
 
         String[] stringValues = in.split(":");
 
+        if (stringValues.length != 2)
+            throw new WrongArgumentException();
+
         if (!StringUtils.isNumeric(stringValues[0]) || !StringUtils.isNumeric(stringValues[1]))
             throw new WrongArgumentException();
 
@@ -106,8 +109,9 @@ public class CommandParser {
     }
 
     private static String parseOutDir(String in){
+
         if (in == null)
-            return "." ;
+            return ".";
 
         return in;
     }

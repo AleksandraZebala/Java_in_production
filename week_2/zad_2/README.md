@@ -1,4 +1,4 @@
-# module.Generator transakcji
+# Generator transakcji
 
 ## Komentarz do rozwiązania
 
