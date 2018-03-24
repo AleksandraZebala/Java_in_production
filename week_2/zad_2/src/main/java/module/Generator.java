@@ -2,7 +2,7 @@ package module;
 import com.google.gson.GsonBuilder;
 import data.InputData;
 import data.Item;
-import data.OutputData;
+import data.JSONData;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,13 +12,12 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.List;
 
 public class Generator {
 
     private static int getRandomInteger(Integer from, Integer to){
+
         return (int) (from + Math.random() * (to - from));
     }
 
@@ -52,9 +51,11 @@ public class Generator {
         return itemsList;
     }
 
-    /*public static void saveToFile throws IOException(String JSONdata, String outDir){
+    public static void generateToFile(InputData input) throws Exception {
 
-        File output = new File(outDir);
+        String jsonData = generate(input);
+
+        File output = new File(input.outDir);
 
         if(!output.exists())
             output.mkdir();
@@ -62,17 +63,17 @@ public class Generator {
         PrintWriter out = new PrintWriter(output + "/output.json");
         out.println(jsonData);
         out.close();
-    }*/
+    }
 
-    public static String generateJSON(InputData input) throws IOException{
+    public static String generate(InputData input) throws IOException{
 
         ArrayList<Item> itemsList = getItemsList(input.itemsFile);
 
-        ArrayList<OutputData> outs = new ArrayList<OutputData>();
+        ArrayList<JSONData> outs = new ArrayList<JSONData>();
 
         for (int i = 0; i < input.eventsCount; i++) {
 
-            OutputData output = new OutputData();
+            JSONData output = new JSONData();
 
             output.id = i;
 
@@ -82,7 +83,6 @@ public class Generator {
 
             ArrayList<Item> items = new ArrayList<Item>();
             int itemsCount = getRandomInteger(input.itemsCount.from, input.itemsCount.to);
-
 
             for(int j = 0; j < itemsCount; j++) {
                 Item item = itemsList.get(j % itemsList.size());

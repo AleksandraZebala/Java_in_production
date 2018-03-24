@@ -1,3 +1,5 @@
+import data.InputData;
+import data.JSONData;
 import exceptions.WrongArgumentException;
 import exceptions.WrongFileException;
 import module.CommandParser;
@@ -6,7 +8,8 @@ import module.Generator;
 public class Main {
     public static void main(String[] args){
         try {
-            Generator.generateJSON(CommandParser.parse(args));
+            InputData input = CommandParser.parse(args);
+            Generator.generateToFile(input);
             System.out.println("File generated!");
         }
         catch(WrongArgumentException e){

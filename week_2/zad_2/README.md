@@ -2,6 +2,8 @@
 
 ## Komentarz do rozwiązania
 
+Raporty nie generują faktycznego pokrycia, ponieważ niestety używam PowerMockito (Jacoco i Mockito nie są kompatybilne z tego co udało mi sie dowiedzieć). Starałam się tego nie robić, ale niestety nie mam pojęcia jak bez jego użycia zamockować plik wejściowy, jeżeli w teście nie przekazuję go nigdzie bezpośrednio... W rzeczywistości klasy CommandParser oraz Generator są w 100% pokryte. 
+
 plik wyjściowy ma nazwę "output.json", domyślnie zapisuje się w głównym folderze projektu
 
 Komendy do użycia:

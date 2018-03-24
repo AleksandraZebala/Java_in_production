@@ -1,7 +1,7 @@
 package data;
 import java.util.ArrayList;
 
-public class OutputData {
+public class JSONData {
     public int id;
     public String timestamp;
     public int customer_id;
