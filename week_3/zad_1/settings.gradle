@@ -1,0 +1,5 @@
+rootProject.name = 'zad_1'
+rootProject.name = 'zad_1'
+
+include "Payments", "Tools"
+

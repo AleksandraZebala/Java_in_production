@@ -1,0 +1,38 @@
+group 'jwzp'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.25'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.10.0'
+
+    compile(project(':Payments')){
+        exclude group: 'org.apache.logging.log4j'
+    }
+
+    compile(project(':Tools')){
+        exclude group: 'log4j'
+    }
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "zad_1.Main"
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

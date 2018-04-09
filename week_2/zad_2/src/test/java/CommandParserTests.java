@@ -1,4 +1,5 @@
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -21,15 +22,14 @@ public class CommandParserTests {
     @Test
     public void allArgumentsTest() throws Exception{
 
-        CommandParser commandParser = new CommandParser();
-
-        File file = Mockito.mock(File.class);
-        PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(file);
-        Mockito.when(file.exists()).thenReturn(Boolean.TRUE);
+        TemporaryFolder tempFolder = new TemporaryFolder();
+        File file = tempFolder.newFile("test.test");
+        file.createNewFile();
+        assertTrue(file.exists());
 
         String arg = "-customerIds 2:15 " +
                 "-dateRange 2018-03-08T00:00:00.000-0100:2018-03-08T23:59:59.999-0100 " +
-                "-itemsFile items.csv " +
+                "-itemsFile test.test " +
                 "-itemsCount 5:15 " +
                 "-itemsQuantity 1:30 " +
                 "-eventsCount 10 " +

@@ -85,7 +85,7 @@ public class CommandParser {
 
     private static File parseItemsFile (String in) throws WrongFileException{
 
-        File file = new File("src/main/java/" + in);
+        File file = new File("src/main/resources/" + in);
 
         if (!file.exists())
             throw new WrongFileException();
