@@ -1,19 +1,14 @@
 package module;
+
 import data.InputData;
 import data.Range;
 import exceptions.WrongArgumentException;
-import exceptions.WrongFileException;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
-import java.io.File;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 
 public class CommandParser {
 
@@ -83,17 +78,11 @@ public class CommandParser {
         }
     }
 
-    private static File parseItemsFile (String in) throws WrongFileException{
-
-        File file = new File("src/main/resources/" + in);
-
-        if (!file.exists())
-            throw new WrongFileException();
-
-        return file;
+    private static String parseItemsFile (String in) {
+        return in;
     }
 
-    private static int parseEventsCount(String in, String def) throws WrongArgumentException{
+    private static int parseEventsCount(String in, String def) throws WrongArgumentException {
 
         if (in == null)
             in = def;
@@ -113,7 +102,7 @@ public class CommandParser {
     }
 
     public static InputData parse(String[] args)
-            throws WrongArgumentException, WrongFileException, ParseException{
+            throws WrongArgumentException, ParseException {
 
             CommandLine cmd = new BasicParser().parse(newOptions(), args);
             InputData result = new InputData();

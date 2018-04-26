@@ -1,31 +1,17 @@
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import data.InputData;
 import module.CommandParser;
+import exceptions.WrongArgumentException;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.junit.Test;
 import static org.junit.Assert.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CommandParser.class)
 public class CommandParserTests {
 
     @Test
-    public void allArgumentsTest() throws Exception{
-
-        TemporaryFolder tempFolder = new TemporaryFolder();
-        File file = tempFolder.newFile("test.test");
-        file.createNewFile();
-        assertTrue(file.exists());
+    public void allRightArgumentsTest() throws Exception {
 
         String arg = "-customerIds 2:15 " +
                 "-dateRange 2018-03-08T00:00:00.000-0100:2018-03-08T23:59:59.999-0100 " +
@@ -42,7 +28,7 @@ public class CommandParserTests {
         assertEquals(Integer.valueOf(2), result.customerIds.from);
         assertEquals(Integer.valueOf(15), result.customerIds.to);
 
-        assertEquals(file, result.itemsFile);
+        assertEquals("test.test", result.itemsFile);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -61,23 +47,19 @@ public class CommandParserTests {
         assertEquals(10, result.eventsCount);
 
         assertEquals("./output", result.outDir);
-
     }
 
     @Test
-    public void onlyItemFileArgumentTest() throws Exception{
+    public void onlyItemFileArgumentTest() throws Exception {
 
-        CommandParser commandParser = new CommandParser();
+        String[] args = {"-itemsFile", "test.test"};
 
-        File file = Mockito.mock(File.class);
-        PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(file);
-        Mockito.when(file.exists()).thenReturn(Boolean.TRUE);
-
-        String[] args = {};
         InputData result = CommandParser.parse(args);
 
         assertEquals(Integer.valueOf(1), result.customerIds.from);
         assertEquals(Integer.valueOf(20), result.customerIds.to);
+
+        assertEquals("test.test", result.itemsFile);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -101,5 +83,64 @@ public class CommandParserTests {
         assertEquals(100, result.eventsCount);
 
         assertEquals(".", result.outDir);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongCustomerIdTest() throws Exception{
+        String[] args = {"-customerIds", "djidji"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongCustomerIdTest2() throws Exception{
+        String[] args = {"-customerIds", "j:5:7"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongItemsCountTest() throws Exception{
+        String[] args = {"-itemsCount", "555:j"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongItemsCountTest2() throws Exception{
+        String[] args = {"-itemsCount", "c:c"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongItemsQuantityTest1() throws Exception{
+        String[] args = {"-itemsQuantity", "87:2"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongItemsQuantityTest2() throws Exception{
+        String[] args = {"-itemsQuantity", "j:5"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongEventsCountTest() throws Exception{
+        String[] args = {"-eventsCount", "aaa"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongDateTest1() throws Exception{
+        String[] args = {"-dateRange", "haha"};
+        CommandParser.parse(args);
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void wrongDateTest2() throws Exception{
+        String[] args = {"-dateRange", "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmqtdf8"};
+        CommandParser.parse(args);
+    }
+
+    @Test
+    public void classTest(){
+        CommandParser commandParser = new CommandParser();
     }
 }
