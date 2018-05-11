@@ -4,12 +4,12 @@ import data.Item;
 import exceptions.WrongFileException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ItemsParser {
 
-    public static ArrayList<Item> getItemsList(FileWrapper file) throws IOException, WrongFileException {
+    public ArrayList<Item> getItemsList(FileWrapper file) throws IOException, WrongFileException {
 
         if (!file.exists())
             throw new WrongFileException();
@@ -19,9 +19,9 @@ public class ItemsParser {
 
         itemsFromFile.forEach(line -> {
             String[] itemValues = line.split(",");
-            Item item = new Item();
-            item.name = itemValues[0].replace("\"", "");
-            item.price = Float.parseFloat(itemValues[1]);
+            String name = itemValues[0].replace("\"", "");
+            BigDecimal price = BigDecimal.valueOf(Float.parseFloat(itemValues[1]));
+            Item item = new Item(name, price);
             itemsList.add(item);
         });
 

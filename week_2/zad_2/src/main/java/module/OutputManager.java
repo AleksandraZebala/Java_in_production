@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 public class OutputManager {
 
-    public static void saveToFile(String data, String outDir) throws Exception {
+    public void saveToFile(String data, String outDir) throws Exception {
 
         File output = new File(outDir);
 

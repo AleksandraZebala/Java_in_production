@@ -1,8 +1,10 @@
 import data.InputData;
 import data.Item;
+import data.Range;
 import module.Generator;
 import module.Randomizer;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,9 +22,9 @@ public class GeneratorTests{
     public void generatorTest() throws Exception{
 
         ArrayList<Item> itemsList = new ArrayList<Item>();
-        Item item = new Item();
-        item.name = "lizak";
-        item.price = (float) 2.30;
+        String name = "lizak";
+        BigDecimal price = new BigDecimal("2.3");
+        Item item = new Item(name, price);
         itemsList.add(item);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -35,19 +37,20 @@ public class GeneratorTests{
                 ZonedDateTime.parse("2018-03-08T00:00:00.050-0100", formatter)))
                 .thenReturn("2018-03-08T00:00:00.050-0100");
 
-        InputData inputData = new InputData();
 
-        inputData.customerIds.from = 1;
-        inputData.customerIds.to = 100;
-        inputData.dateRange.from = ZonedDateTime.parse("2018-03-08T00:00:00.050-0100", formatter);
-        inputData.dateRange.to = ZonedDateTime.parse("2018-03-08T00:00:00.050-0100", formatter);
-        inputData.itemsCount.from = 1;
-        inputData.itemsCount.to = 3;
-        inputData.itemsQuantity.from = 1;
-        inputData.itemsQuantity.to = 10;
-        inputData.eventsCount = 1;
+        Range customerIds = new Range(1, 100);
+        Range dateRange = new Range(ZonedDateTime.parse("2018-03-08T00:00:00.050-0100", formatter),
+                ZonedDateTime.parse("2018-03-08T00:00:00.050-0100", formatter));
+        Range itemsCount = new Range(1, 3);
+        Range itemsQuantity = new Range(1, 10);
+        int eventsCount = 1;
+        String itemsFile = "test";
+        String outDir = "test";
 
-        String JSON = Generator.generate(inputData, itemsList, randomizer);
+        InputData inputData = new InputData(customerIds, dateRange, itemsFile,
+                itemsCount, itemsQuantity, eventsCount, outDir);
+
+        String JSON = new Generator().generate(inputData, itemsList, randomizer);
 
         String expectedJSON = "[\n" +
                 "  {\n" +
@@ -61,15 +64,10 @@ public class GeneratorTests{
                 "        \"price\": 2.3\n" +
                 "      }\n" +
                 "    ],\n" +
-                "    \"sum\": 20.69999885559082\n" +
+                "    \"sum\": 20.70\n" +
                 "  }\n" +
                 "]";
 
         assertEquals(expectedJSON, JSON);
-    }
-
-    @Test
-    public void classTest(){
-        Generator generator = new Generator();
     }
 }

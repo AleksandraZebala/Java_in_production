@@ -10,9 +10,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class CommandParser {
+public final class CommandParser {
 
-    private static Options newOptions() {
+    private Options newOptions() {
         Options options = new Options();
         options.addOption("customerIds", true, "customerIds");
         options.addOption("dateRange", true, "dateRange");
@@ -24,7 +24,7 @@ public class CommandParser {
         return options;
     }
 
-    private static void parseRange(String in, Range result, String default_values)
+    private Range<Integer> parseRange(String in, String default_values)
             throws WrongArgumentException {
 
         if(in == null)
@@ -46,20 +46,19 @@ public class CommandParser {
         if(intValues[0] > intValues[1])
             throw new WrongArgumentException();
 
-        result.from = intValues[0];
-        result.to = intValues[1];
+        return new Range(intValues[0], intValues[1]);
     }
 
-    private static void parseDateRange(String in, Range result) throws WrongArgumentException {
+    private Range<ZonedDateTime> parseDateRange(String in) throws WrongArgumentException {
 
         if (in == null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             in = LocalDateTime.now().format(formatter);
 
             DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            result.from = ZonedDateTime.parse(in + "T00:00:00.000-0100", formatter2);
-            result.to = ZonedDateTime.parse(in + "T23:59:59.999-0100", formatter2);
-            return;
+            ZonedDateTime from = ZonedDateTime.parse(in + "T00:00:00.000-0100", formatter2);
+            ZonedDateTime to = ZonedDateTime.parse(in + "T23:59:59.999-0100", formatter2);
+            return new Range(from, to);
         }
 
         if (in.length() != 57)
@@ -71,18 +70,18 @@ public class CommandParser {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
         try {
-            result.from = ZonedDateTime.parse(from, formatter);
-            result.to = ZonedDateTime.parse(to, formatter);
+            Range result = new Range(ZonedDateTime.parse(from, formatter), ZonedDateTime.parse(to, formatter));
+            return result;
         } catch(DateTimeParseException e){
             throw new WrongArgumentException();
         }
     }
 
-    private static String parseItemsFile (String in) {
+    private String parseItemsFile (String in) {
         return in;
     }
 
-    private static int parseEventsCount(String in, String def) throws WrongArgumentException {
+    private int parseEventsCount(String in, String def) throws WrongArgumentException {
 
         if (in == null)
             in = def;
@@ -93,7 +92,7 @@ public class CommandParser {
         return Integer.parseInt(in);
     }
 
-    private static String parseOutDir(String in){
+    private String parseOutDir(String in){
 
         if (in == null)
             return ".";
@@ -101,33 +100,28 @@ public class CommandParser {
         return in;
     }
 
-    public static InputData parse(String[] args)
+    public InputData parse(String[] args)
             throws WrongArgumentException, ParseException {
 
-            CommandLine cmd = new BasicParser().parse(newOptions(), args);
-            InputData result = new InputData();
+        CommandLine cmd = new BasicParser().parse(newOptions(), args);
 
-            String customerIds = cmd.getOptionValue("customerIds");
-            parseRange(customerIds, result.customerIds, "1:20");
+        Range<Integer> customerIds = parseRange(cmd.getOptionValue("customerIds"), "1:20");
 
-            String itemsQuantity = cmd.getOptionValue("itemsQuantity");
-            parseRange(itemsQuantity, result.itemsQuantity, "1:5");
+        Range<Integer> itemsQuantity = parseRange(cmd.getOptionValue("itemsQuantity"), "1:5");
 
-            String itemsCount = cmd.getOptionValue("itemsCount");
-            parseRange(itemsCount, result.itemsCount, "1:5");
+        Range<Integer> itemsCount = parseRange(cmd.getOptionValue("itemsCount"), "1:5");
 
-            String dateRange = cmd.getOptionValue("dateRange");
-            parseDateRange(dateRange, result.dateRange);
+        Range<ZonedDateTime> dateRange = parseDateRange(cmd.getOptionValue("dateRange"));
 
-            String eventsCount = cmd.getOptionValue("eventsCount");
-            result.eventsCount = parseEventsCount(eventsCount, "100");
+        int eventsCount = parseEventsCount(cmd.getOptionValue("eventsCount"), "100");
 
-            String outDir = cmd.getOptionValue("outDir");
-            result.outDir = parseOutDir(outDir);
+        String outDir = parseOutDir(cmd.getOptionValue("outDir"));
 
-            String itemsFile = cmd.getOptionValue("itemsFile");
-            result.itemsFile = parseItemsFile(itemsFile);
+        String itemsFile = parseItemsFile(cmd.getOptionValue("itemsFile"));
 
-            return result;
+        InputData result = new InputData(customerIds, dateRange, itemsFile,
+                itemsCount, itemsQuantity, eventsCount, outDir);
+
+        return result;
     }
 }

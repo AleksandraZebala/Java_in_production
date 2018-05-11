@@ -1,19 +1,16 @@
 import data.InputData;
-import data.JSONData;
 import exceptions.WrongArgumentException;
 import exceptions.WrongFileException;
 import module.*;
-
-import java.io.OutputStream;
 
 public class Main {
     public static void main(String[] args){
         try {
 
-            InputData data = CommandParser.parse(args);
-            FileWrapper fileWrapper = new FileWrapper(data.itemsFile);
-            String result = Generator.generate(data, ItemsParser.getItemsList(fileWrapper), new Randomizer());
-            OutputManager.saveToFile(result, data.outDir);
+            InputData data = new CommandParser().parse(args);
+            FileWrapper fileWrapper = new FileWrapper(data.getItemsFile());
+            String result = new Generator().generate(data, new ItemsParser().getItemsList(fileWrapper), new Randomizer());
+            new OutputManager().saveToFile(result, data.getOutDir());
 
             System.out.println("File generated!");
         }

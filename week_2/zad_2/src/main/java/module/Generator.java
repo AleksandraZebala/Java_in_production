@@ -2,44 +2,47 @@ package module;
 
 import data.InputData;
 import data.Item;
-import data.JSONData;
+import data.Transaction;
 import exceptions.WrongFileException;
 
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Generator {
 
-    public static String generate(InputData input, ArrayList<Item> itemsList, Randomizer randomizer)
+    public String generate(InputData input, ArrayList<Item> itemsList, Randomizer randomizer)
             throws IOException, WrongFileException {
 
-        ArrayList<JSONData> outs = new ArrayList<JSONData>();
+        ArrayList<Transaction> outs = new ArrayList<Transaction>();
 
-        for (int i = 0; i < input.eventsCount; i++) {
+        for (int i = 0; i < input.getEventsCount(); i++) {
 
-            JSONData output = new JSONData();
+            int id = i;
 
-            output.id = i;
+            String timestamp = randomizer.getRandomDate(input.getDateRange().getFrom(),
+                    input.getDateRange().getTo());
 
-            output.timestamp = randomizer.getRandomDate(input.dateRange.from, input.dateRange.to);
-
-            output.customer_id = randomizer.getRandomInteger(input.customerIds.from, input.customerIds.to);
+            int customer_id = randomizer.getRandomInteger(input.getCustomerIds().getFrom(),
+                    input.getCustomerIds().getTo());
 
             ArrayList<Item> items = new ArrayList<Item>();
-            int itemsCount = randomizer.getRandomInteger(input.itemsCount.from, input.itemsCount.to);
+            int itemsCount = randomizer.getRandomInteger(input.getItemsCount().getFrom(),
+                    input.getItemsCount().getTo());
 
             for(int j = 0; j < itemsCount; j++) {
                 Item item = itemsList.get(j % itemsList.size());
-                item.quantity = randomizer.getRandomInteger(input.itemsQuantity.from, input.itemsQuantity.to);
+                item.setQuantity(randomizer.getRandomInteger(input.getItemsQuantity().getFrom(),
+                        input.getItemsQuantity().getTo()));
                 items.add(item);
             }
 
-            output.items = items;
+            BigDecimal sum = items.stream()
+                    .map(item -> BigDecimal.valueOf((double)item.getQuantity()).multiply(item.getPrice()))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            output.sum = items.stream()
-                    .mapToDouble(item -> item.quantity * item.price)
-                    .sum();
+            Transaction output = new Transaction(id, timestamp, customer_id, items, sum);
 
             outs.add(output);
         }
