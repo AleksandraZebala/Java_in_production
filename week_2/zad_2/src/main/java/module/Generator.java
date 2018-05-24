@@ -5,8 +5,8 @@ import data.InputData;
 import data.Item;
 import data.Transaction;
 import exceptions.WrongFileException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Generator {
 
-    private static Logger logger = LoggerFactory.getLogger(CommandParser.class);
+    private static final Logger logger = LogManager.getLogger(CommandParser.class);
 
     public ArrayList<String> generate(InputData input, ArrayList<Item> itemsList, Randomizer randomizer)
             throws IOException, WrongFileException {

@@ -1,7 +1,7 @@
 package module;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class OutputManager {
 
-    private static Logger logger = LoggerFactory.getLogger(CommandParser.class);
+    private static final Logger logger = LogManager.getLogger(CommandParser.class.getName());
 
     public void saveToFiles(ArrayList<String> transactions, String outDir) throws Exception {
 

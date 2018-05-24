@@ -2,8 +2,9 @@ package module;
 
 import data.Item;
 import exceptions.WrongFileException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 
 public class ItemsParser {
 
-    private static Logger logger = LoggerFactory.getLogger(CommandParser.class);
+    private static Logger logger = LogManager.getLogger(CommandParser.class);
 
     public ArrayList<Item> getItemsList(FileWrapper file) throws IOException, WrongFileException {
 

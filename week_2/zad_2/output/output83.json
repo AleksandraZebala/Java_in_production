@@ -1,18 +1,13 @@
 {
   "id": 82,
-  "timestamp": "2018-05-24T18:59:45.717-0100",
-  "customer_id": 11,
+  "timestamp": "2018-05-24T14:41:23.129-0100",
+  "customer_id": 9,
   "items": [
     {
       "name": "mleko 3% 1l",
-      "quantity": 1,
+      "quantity": 3,
       "price": 2.299999952316284
-    },
-    {
-      "name": "bułeczka",
-      "quantity": 1,
-      "price": 1.2000000476837158
     }
   ],
-  "sum": 3.49999999999999980
+  "sum": 6.8999998569488520
 }

@@ -1,11 +1,11 @@
 {
   "id": 13,
-  "timestamp": "2018-05-24T18:35:53.610-0100",
-  "customer_id": 13,
+  "timestamp": "2018-05-24T00:34:24.053-0100",
+  "customer_id": 5,
   "items": [
     {
       "name": "mleko 3% 1l",
-      "quantity": 4,
+      "quantity": 1,
       "price": 2.299999952316284
     },
     {
@@ -15,14 +15,9 @@
     },
     {
       "name": "chleb biały",
-      "quantity": 2,
+      "quantity": 3,
       "price": 2.200000047683716
-    },
-    {
-      "name": "chleb ciemny",
-      "quantity": 1,
-      "price": 2.5
     }
   ],
-  "sum": 17.29999995231628380
+  "sum": 10.10000014305114780
 }

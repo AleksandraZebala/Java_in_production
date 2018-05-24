@@ -1,6 +1,6 @@
 {
   "id": 10,
-  "timestamp": "2018-05-24T15:25:19.648-0100",
+  "timestamp": "2018-05-24T13:12:31.524-0100",
   "customer_id": 9,
   "items": [
     {
@@ -10,19 +10,14 @@
     },
     {
       "name": "bułeczka",
-      "quantity": 3,
+      "quantity": 1,
       "price": 1.2000000476837158
     },
     {
       "name": "chleb biały",
       "quantity": 1,
       "price": 2.200000047683716
-    },
-    {
-      "name": "chleb ciemny",
-      "quantity": 4,
-      "price": 2.5
     }
   ],
-  "sum": 20.40000009536743140
+  "sum": 7.99999999999999980
 }
