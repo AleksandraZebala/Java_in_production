@@ -10,7 +10,7 @@ public class FileWrapper {
     private File file;
 
     public FileWrapper(String filePath){
-        file = new File("resources/" + filePath);
+        file = new File("src/main/resources/"+ filePath);
     }
 
     public boolean exists(){

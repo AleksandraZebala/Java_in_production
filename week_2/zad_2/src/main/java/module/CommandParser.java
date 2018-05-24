@@ -10,7 +10,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class CommandParser {
+
+    private static Logger logger = LoggerFactory.getLogger(CommandParser.class);
 
     private Options newOptions() {
         Options options = new Options();
@@ -27,25 +32,36 @@ public final class CommandParser {
     private Range<Integer> parseRange(String in, String default_values)
             throws WrongArgumentException {
 
-        if(in == null)
+        if(in == null) {
+            logger.info("Parsing default range value: " + default_values);
             in = default_values;
+        }
 
-        if (!in.contains(":"))
+        if (!in.contains(":")){
+            logger.error("Invalid range argument value: Range must be splited by character \":\"");
             throw new WrongArgumentException();
+        }
 
         String[] stringValues = in.split(":");
 
-        if (stringValues.length != 2)
+        if (stringValues.length != 2){
+            logger.error("Invalid range argument value: Range must have two arguments");
             throw new WrongArgumentException();
+        }
 
-        if (!StringUtils.isNumeric(stringValues[0]) || !StringUtils.isNumeric(stringValues[1]))
+        if (!StringUtils.isNumeric(stringValues[0]) || !StringUtils.isNumeric(stringValues[1])) {
+            logger.error("Invalid range argument value: Range arguments must be numeric");
             throw new WrongArgumentException();
+        }
 
         int[] intValues = {Integer.parseInt(stringValues[0]), Integer.parseInt(stringValues[1])};
 
-        if(intValues[0] > intValues[1])
+        if(intValues[0] > intValues[1]) {
+            logger.error("Invalid range argument value: First range argument must be smaller");
             throw new WrongArgumentException();
+        }
 
+        logger.info("Parsed range: " + intValues[0] + ":" + intValues[1]);
         return new Range(intValues[0], intValues[1]);
     }
 
@@ -58,11 +74,15 @@ public final class CommandParser {
             DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             ZonedDateTime from = ZonedDateTime.parse(in + "T00:00:00.000-0100", formatter2);
             ZonedDateTime to = ZonedDateTime.parse(in + "T23:59:59.999-0100", formatter2);
+            logger.info("Parsing default dateRange argument value: " + from.toString() + "-" + to.toString());
+            logger.info("Parsed dateRange argument value: " + from.toString() + "-" + to.toString());
             return new Range(from, to);
         }
 
-        if (in.length() != 57)
+        if (in.length() != 57) {
+            logger.error("Invalid dateRange argument value");
             throw new WrongArgumentException();
+        }
 
         String from = in.substring(0, 28);
         String to = in.substring(29, 57);
@@ -71,32 +91,49 @@ public final class CommandParser {
 
         try {
             Range result = new Range(ZonedDateTime.parse(from, formatter), ZonedDateTime.parse(to, formatter));
+            logger.info("Parsed dateRange argument value: " + result.getFrom().toString() + "-" + result.getTo().toString());
             return result;
         } catch(DateTimeParseException e){
+            logger.error("Invalid dateRange argument value");
             throw new WrongArgumentException();
         }
     }
 
-    private String parseItemsFile (String in) {
+    private String parseItemsFile (String in) throws WrongArgumentException{
+
+        if (in == null){
+            logger.error("itemsFile argument is required");
+            throw new WrongArgumentException();
+        }
+
+        logger.info("Parsed itemsFile argument: " + in);
         return in;
     }
 
     private int parseEventsCount(String in, String def) throws WrongArgumentException {
 
-        if (in == null)
+        if (in == null) {
+            logger.info("Parsing default eventsCount arguments: " + def);
             in = def;
+        }
 
-        if (!StringUtils.isNumeric(in))
+        if (!StringUtils.isNumeric(in)){
+            logger.error("eventsCount argument must be numeric");
             throw new WrongArgumentException();
+        }
 
+        logger.info("Parsed eventsCount arguments: " + in);
         return Integer.parseInt(in);
     }
 
     private String parseOutDir(String in){
 
-        if (in == null)
+        if (in == null) {
+            logger.info("Parsing default outDir argument: current folder");
             return ".";
+        }
 
+        logger.info("Parsed outDir argument: "+ in);
         return in;
     }
 
@@ -105,19 +142,66 @@ public final class CommandParser {
 
         CommandLine cmd = new BasicParser().parse(newOptions(), args);
 
-        Range<Integer> customerIds = parseRange(cmd.getOptionValue("customerIds"), "1:20");
+        Range<Integer> customerIds;
+        Range<Integer> itemsQuantity;
+        Range<Integer> itemsCount;
+        Range<ZonedDateTime> dateRange;
+        int eventsCount;
+        String outDir;
+        String itemsFile;
 
-        Range<Integer> itemsQuantity = parseRange(cmd.getOptionValue("itemsQuantity"), "1:5");
+        try
+        {
+            logger.info("Parsing customerIds argument...");
+            customerIds = parseRange(cmd.getOptionValue("customerIds"), "1:20");
+        }
 
-        Range<Integer> itemsCount = parseRange(cmd.getOptionValue("itemsCount"), "1:5");
+        catch(WrongArgumentException e){
+            logger.error("Invalid customerIds argument value");
+            throw e;
+        }
 
-        Range<ZonedDateTime> dateRange = parseDateRange(cmd.getOptionValue("dateRange"));
+        try {
+            logger.info("Parsing itemsQuantity argument...");
+            itemsQuantity = parseRange(cmd.getOptionValue("itemsQuantity"), "1:5");
+        }
+        catch(WrongArgumentException e){
+            logger.error("Invalid itemsQuantity value");
+            throw e;
+        }
 
-        int eventsCount = parseEventsCount(cmd.getOptionValue("eventsCount"), "100");
+        try {
+            logger.info("Parsing itemsCount argument...");
+            itemsCount = parseRange(cmd.getOptionValue("itemsCount"), "1:5");
+        }
+        catch(WrongArgumentException e){
+            logger.error("Invalid itemsCount argument value");
+            throw e;
+        }
 
-        String outDir = parseOutDir(cmd.getOptionValue("outDir"));
+        try {
+            logger.info("Parsing dateRange argument...");
+            dateRange = parseDateRange(cmd.getOptionValue("dateRange"));
+        }
+        catch(WrongArgumentException e){
+            logger.error("Invalid dateRange argument...");
+            throw e;
+        }
 
-        String itemsFile = parseItemsFile(cmd.getOptionValue("itemsFile"));
+        try {
+            logger.info("Parsing eventsCount argument...");
+            eventsCount = parseEventsCount(cmd.getOptionValue("eventsCount"), "100");
+        }
+        catch(WrongArgumentException e){
+            logger.error("Invalid eventsCount argument value");
+            throw e;
+        }
+
+        logger.info("Parsing outDir argument...");
+        outDir = parseOutDir(cmd.getOptionValue("outDir"));
+
+        logger.info("Parsing itemsFile argument...");
+        itemsFile = parseItemsFile(cmd.getOptionValue("itemsFile"));
 
         InputData result = new InputData(customerIds, dateRange, itemsFile,
                 itemsCount, itemsQuantity, eventsCount, outDir);

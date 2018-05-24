@@ -1,24 +1,31 @@
 package module;
 
+import com.google.gson.GsonBuilder;
 import data.InputData;
 import data.Item;
 import data.Transaction;
 import exceptions.WrongFileException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Generator {
 
-    public String generate(InputData input, ArrayList<Item> itemsList, Randomizer randomizer)
+    private static Logger logger = LoggerFactory.getLogger(CommandParser.class);
+
+    public ArrayList<String> generate(InputData input, ArrayList<Item> itemsList, Randomizer randomizer)
             throws IOException, WrongFileException {
 
-        ArrayList<Transaction> outs = new ArrayList<Transaction>();
+        logger.info("Starting generating transactions...");
+
+        ArrayList<String> outs = new ArrayList<>();
 
         for (int i = 0; i < input.getEventsCount(); i++) {
 
+            logger.info("Generating transaction number " + i);
             int id = i;
 
             String timestamp = randomizer.getRandomDate(input.getDateRange().getFrom(),
@@ -42,15 +49,19 @@ public class Generator {
                     .map(item -> BigDecimal.valueOf((double)item.getQuantity()).multiply(item.getPrice()))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            Transaction output = new Transaction(id, timestamp, customer_id, items, sum);
+            Transaction transaction = new Transaction(id, timestamp, customer_id, items, sum);
+
+            String output = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .serializeNulls()
+                    .create()
+                    .toJson(transaction);
+
+            logger.info("Generated transaction:\n" + output);
 
             outs.add(output);
         }
 
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create()
-                .toJson(outs);
+        return outs;
     }
 }

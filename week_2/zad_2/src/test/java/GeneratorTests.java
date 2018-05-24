@@ -1,6 +1,8 @@
+import com.google.gson.GsonBuilder;
 import data.InputData;
 import data.Item;
 import data.Range;
+import data.Transaction;
 import module.Generator;
 import module.Randomizer;
 
@@ -16,12 +18,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GeneratorTests{
+public class GeneratorTests {
 
     @Test
     public void generatorTest() throws Exception{
 
-        ArrayList<Item> itemsList = new ArrayList<Item>();
+        ArrayList<Item> itemsList = new ArrayList<>();
         String name = "lizak";
         BigDecimal price = new BigDecimal("2.3");
         Item item = new Item(name, price);
@@ -50,23 +52,23 @@ public class GeneratorTests{
         InputData inputData = new InputData(customerIds, dateRange, itemsFile,
                 itemsCount, itemsQuantity, eventsCount, outDir);
 
-        String JSON = new Generator().generate(inputData, itemsList, randomizer);
+        ArrayList<String> transactions = new Generator().generate(inputData, itemsList, randomizer);
 
-        String expectedJSON = "[\n" +
-                "  {\n" +
-                "    \"id\": 0,\n" +
-                "    \"timestamp\": \"2018-03-08T00:00:00.050-0100\",\n" +
-                "    \"customer_id\": 70,\n" +
-                "    \"items\": [\n" +
-                "      {\n" +
-                "        \"name\": \"lizak\",\n" +
-                "        \"quantity\": 9,\n" +
-                "        \"price\": 2.3\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"sum\": 20.70\n" +
-                "  }\n" +
-                "]";
+        String JSON = transactions.get(0);
+
+        String expectedJSON = "{\n" +
+                "  \"id\": 0,\n" +
+                "  \"timestamp\": \"2018-03-08T00:00:00.050-0100\",\n" +
+                "  \"customer_id\": 70,\n" +
+                "  \"items\": [\n" +
+                "    {\n" +
+                "      \"name\": \"lizak\",\n" +
+                "      \"quantity\": 9,\n" +
+                "      \"price\": 2.3\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"sum\": 20.70\n" +
+                "}";
 
         assertEquals(expectedJSON, JSON);
     }
