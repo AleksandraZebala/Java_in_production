@@ -16,12 +16,12 @@ public class Generator {
 
     private static final Logger logger = LogManager.getLogger(CommandParser.class);
 
-    public ArrayList<String> generate(InputData input, ArrayList<Item> itemsList, Randomizer randomizer)
+    public ArrayList<Transaction> generate(InputData input, ArrayList<Item> itemsList, Randomizer randomizer)
             throws IOException, WrongFileException {
 
         logger.info("Starting generating transactions...");
 
-        ArrayList<String> outs = new ArrayList<>();
+        ArrayList<Transaction> outs = new ArrayList<>();
 
         for (int i = 0; i < input.getEventsCount(); i++) {
 
@@ -51,15 +51,7 @@ public class Generator {
 
             Transaction transaction = new Transaction(id, timestamp, customer_id, items, sum);
 
-            String output = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .serializeNulls()
-                    .create()
-                    .toJson(transaction);
-
-            logger.info("Generated transaction:\n" + output);
-
-            outs.add(output);
+            outs.add(transaction);
         }
 
         return outs;

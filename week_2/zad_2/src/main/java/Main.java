@@ -1,4 +1,5 @@
 import data.InputData;
+import data.Transaction;
 import exceptions.WrongArgumentException;
 import exceptions.WrongFileException;
 import module.*;
@@ -19,8 +20,8 @@ public class Main {
             logger.info(info);
             InputData data = new CommandParser().parse(args);
             FileWrapper fileWrapper = new FileWrapper(data.getItemsFile());
-            ArrayList<String> transactions = new Generator().generate(data, new ItemsParser().getItemsList(fileWrapper), new Randomizer());
-            new OutputManager().saveToFiles(transactions, data.getOutDir());
+            ArrayList<Transaction> transactions = new Generator().generate(data, new ItemsParser().getItemsList(fileWrapper), new Randomizer());
+            new XMLOutputManager().saveToFiles(transactions, data.getOutDir());
 
             logger.info("Transactions generated succesfully");
         }
