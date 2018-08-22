@@ -44,7 +44,7 @@ dependencies {
 shadowJar {
 
     manifest {
-        attributes "Main-Class": "Main"
+        attributes "jwzp.Main-Class": "jwzp.Main"
     }
 
     baseName = 'transaction-generator'

@@ -1,6 +1,6 @@
-import data.InputData;
-import module.CommandParser;
-import exceptions.WrongArgumentException;
+import jwzp.data.InputData;
+import jwzp.module.CommandParser;
+import jwzp.exceptions.WrongArgumentException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

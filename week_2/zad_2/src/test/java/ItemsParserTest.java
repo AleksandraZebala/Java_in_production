@@ -1,7 +1,7 @@
-import data.Item;
-import exceptions.WrongFileException;
-import module.FileWrapper;
-import module.ItemsParser;
+import jwzp.data.Item;
+import jwzp.exceptions.WrongFileException;
+import jwzp.module.FileWrapper;
+import jwzp.module.ItemsParser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

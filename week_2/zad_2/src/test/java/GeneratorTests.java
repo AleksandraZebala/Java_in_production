@@ -1,22 +1,3 @@
-import com.google.gson.GsonBuilder;
-import data.InputData;
-import data.Item;
-import data.Range;
-import data.Transaction;
-import module.Generator;
-import module.Randomizer;
-
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import static org.junit.Assert.*;
-
 //@RunWith(MockitoJUnitRunner.class)
 //public class GeneratorTests {
 

@@ -1,4 +1,4 @@
-import module.Randomizer;
+import jwzp.module.Randomizer;
 import org.junit.Assert;
 import org.junit.Test;
 
