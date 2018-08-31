@@ -1,6 +1,4 @@
 package jwzp.broker;
-
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jwzp.data.Transaction;
@@ -8,8 +6,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 import java.util.List;
 
-
 public class JmsQueueProducer {
+
     private String brokerURL;
     private String queueName;
     private List<Transaction> transactions;

@@ -1,10 +1,15 @@
 package jwzp;
 
+import jwzp.broker.JmsQueueProducer;
+import jwzp.broker.JmsTopicProducer;
 import jwzp.data.InputData;
 import jwzp.data.Transaction;
 import jwzp.exceptions.WrongArgumentException;
 import jwzp.exceptions.WrongFileException;
 import jwzp.module.*;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class Main {
@@ -25,32 +31,6 @@ public class Main {
 
     public static void main(String[] args){
 
-        if (args.length == 1 && args[0].equals("docker")) {
-            try {
-                Properties prop = new Properties();
-                InputStream inputStream = new FileInputStream("/storage/generator.properties");
-                prop.load(inputStream);
-                args = new String[]{
-                        "-customerIds",
-                        prop.getProperty("customerIds"),
-                        "-dateRange",
-                        prop.getProperty("dateRange").replace("\"", ""),
-                        "-itemsFile",
-                        "." + prop.getProperty("itemsFile"),
-                        "-itemsCount",
-                        prop.getProperty("itemsCount"),
-                        "-itemsQuantity",
-                        prop.getProperty("itemsQuantity"),
-                        "-eventsCount",
-                        prop.getProperty("eventsCount"),
-                        "-outDir",
-                        "." + prop.getProperty("outDir"),
-                        "--format=" + prop.getProperty("format")
-                };
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         ApplicationContext applicationContext = getApplicationContext(args);
         try {
             String info = "Program started with arguments:";
@@ -75,6 +55,23 @@ public class Main {
             outputManager.saveToFiles(transactions, data.getOutDir());
 
             logger.info("Transactions generated succesfully");
+
+            String broker = data.getBroker();
+            logger.info("Broker url: " + broker);
+            if(broker != null){
+                String queue = data.getQueue();
+                String topic = data.getTopic();
+                if(queue != null){
+                    logger.info("Sending transactions to the queue named: " + queue);
+                    JmsTopicProducer jmsTopicProducer = new JmsTopicProducer(broker, topic, transactions);
+                    jmsTopicProducer.sendTransactionsAsMessages();
+                }
+                if(topic != null){
+                    logger.info("Sending transactions to the topic named: " + topic);
+                    JmsQueueProducer jmsQueueProducer = new JmsQueueProducer(broker, queue, transactions);
+                    jmsQueueProducer.sendTransactionsAsMessages();
+                }
+            }
         }
         catch(WrongArgumentException e){
             logger.error("Invalid arguments - please try again");

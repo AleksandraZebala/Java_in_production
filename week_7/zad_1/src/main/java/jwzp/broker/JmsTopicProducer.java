@@ -1,5 +1,4 @@
 package jwzp.broker;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jwzp.data.Transaction;
@@ -8,6 +7,7 @@ import javax.jms.*;
 import java.util.List;
 
 public class JmsTopicProducer {
+
     private String brokerURL;
     private String topicName;
     private List<Transaction> transactions;

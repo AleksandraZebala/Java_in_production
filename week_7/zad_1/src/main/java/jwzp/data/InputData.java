@@ -11,9 +11,11 @@ public final class InputData {
     private int eventsCount;
     private String outDir;
 
-    public InputData(Range<Integer> customerIds, Range<ZonedDateTime> dateRange,
-                     String itemsFile, Range<Integer> itemsCount,
-                     Range<Integer> itemsQuantity, int eventsCount, String outDir) {
+    private String broker;
+    private String queue;
+    private String topic;
+
+    public InputData(Range<Integer> customerIds, Range<ZonedDateTime> dateRange, String itemsFile, Range<Integer> itemsCount, Range<Integer> itemsQuantity, int eventsCount, String outDir, String broker, String queue, String topic) {
         this.customerIds = customerIds;
         this.dateRange = dateRange;
         this.itemsFile = itemsFile;
@@ -21,7 +23,12 @@ public final class InputData {
         this.itemsQuantity = itemsQuantity;
         this.eventsCount = eventsCount;
         this.outDir = outDir;
+        this.broker = broker;
+        this.queue = queue;
+        this.topic = topic;
     }
+
+
 
     public String getOutDir() { return outDir; }
 
@@ -36,4 +43,16 @@ public final class InputData {
     public Range<Integer> getItemsQuantity() { return itemsQuantity; }
 
     public int getEventsCount() { return eventsCount; }
+
+    public String getBroker() {
+        return broker;
+    }
+
+    public String getQueue() {
+        return queue;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
 }

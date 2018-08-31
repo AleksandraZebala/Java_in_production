@@ -28,6 +28,10 @@ public final class CommandParser {
         options.addOption("itemsQuantity", true, "itemsQuantity");
         options.addOption("eventsCount", true, "eventsCount");
         options.addOption("outDir", true, "outDir");
+        options.addOption("broker", true, "broker");
+        options.addOption("queue", true, "queue");
+        options.addOption("topic", true, "topic");
+
         return options;
     }
 
@@ -206,7 +210,8 @@ public final class CommandParser {
         itemsFile = parseItemsFile(cmd.getOptionValue("itemsFile"));
 
         InputData result = new InputData(customerIds, dateRange, itemsFile,
-                itemsCount, itemsQuantity, eventsCount, outDir);
+                itemsCount, itemsQuantity, eventsCount, outDir,
+                cmd.getOptionValue("broker"), cmd.getOptionValue("queue"), cmd.getOptionValue("topic"));
 
         return result;
     }
