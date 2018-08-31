@@ -2,8 +2,6 @@
 
 ## Komentarz do rozwiązania
 
-transakcje generowane są do katalogu "output"
-
 Komendy do użycia:
 
 - Budowanie projektu i tworzenie raportów testowych:
